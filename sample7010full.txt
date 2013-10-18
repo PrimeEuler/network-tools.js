@@ -1,0 +1,363 @@
+version 4.0(2)
+license grace-period
+feature ospf
+feature pim
+feature eigrp
+feature udld
+feature interface-vlan
+feature hsrp
+feature lacp
+feature glbp
+username admin password 5 $1$EeK1VKxb$sTWjduJr5kI2SV.xvFW081  role network-admin
+username dcbadmin password 5 $1$Xhw7JNlK$qcY3n2L6o6QlyeEaXFDsN.  role network-admin
+telnet server enable
+ssh key rsa 768 force
+ntp server 172.26.129.252 use-vrf management
+ip domain-lookup
+ip host dcb-n7k1 192.168.30.54
+kernel core target 0.0.0.0
+kernel core limit 1
+snmp-server user admin network-admin auth md5 0xe12f21cd7a32f1c798c96d0e7b6991ab priv 
+0xe12f21cd7a32f1c798c96d0e7b6991ab localizedkey
+snmp-server user dcbadmin network-admin auth md5 0x5136fec6ca133ee17d2446761efab775 priv 
+0x5136fec6ca133ee17d2446761efab775 localizedkey
+snmp-server enable traps entity fru
+snmp-server enable traps license
+vrf context management
+  ip route 0.0.0.0/0 192.168.30.1
+switchname dcb-n7k1
+vlan 1,128-133,151-153,161-167,180-183,300-379,770-771
+spanning-tree vlan 128-133,166-167,180-183,300-379 priority 24576
+route-map STAT-MAP permit 10
+  match ip address STAT-LIST 
+  set metric-type type-1
+key chain eigrp
+  key 7
+    key-string 7 070c285f4d06
+vdc dcb-n7k1 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource monitor-session minimum 0 maximum 2
+  limit-resource vrf minimum 16 maximum 8192
+  limit-resource port-channel minimum 0 maximum 192
+  limit-resource u4route-mem minimum 32 maximum 80
+  limit-resource u6route-mem minimum 16 maximum 48
+
+interface Vlan1
+
+interface Vlan128
+  no shutdown
+  ip address 10.8.128.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.128.1 
+
+interface Vlan129
+  no shutdown
+  ip address 10.8.129.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.129.1 
+
+interface Vlan130
+  no shutdown
+  ip address 10.8.130.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.130.1 
+
+interface Vlan131
+  no shutdown
+  ip address 10.8.131.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.131.1 
+
+interface Vlan132
+  no shutdown
+  ip address 10.8.132.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.132.1 
+
+interface Vlan133
+  no shutdown
+  ip address 10.8.133.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.133.1 
+
+interface Vlan161
+  no shutdown
+  ip address 10.8.161.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip authentication mode eigrp 8 md5
+  ip authentication key-chain eigrp 8 eigrp
+  hsrp 1
+    authentication c1sc0
+    preempt 
+    priority 20
+    timers  1  3
+    ip 10.8.161.1 
+
+interface Vlan164
+  no shutdown
+  ip address 10.8.164.3/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    mac-address 1008.0164.0001
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.164.1 
+
+interface Vlan165
+  no shutdown
+  ip address 10.8.165.3/24
+  ip router eigrp 8
+  ip passive-interface eigrp 8
+  hsrp 1
+    authentication c1sc0
+    mac-address 1008.0165.0001
+    preempt delay minimum 180 
+    priority 20
+    timers  1  3
+    ip 10.8.165.1 
+
+interface port-channel99
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 128-133,151-153,161-167,180-183
+  switchport trunk allowed vlan add 300-399,770-771
+  spanning-tree port type network
+  spanning-tree guard loop
+  logging event port link-status
+  description link to n7k2
+
+interface port-channel111
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  spanning-tree guard loop
+  logging event port link-status
+  description  to ss1 
+
+interface port-channel211
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  spanning-tree guard loop
+  logging event port link-status
+  description  to ss2 
+
+interface cmp-mgmt module 5
+      ip address 192.168.30.64 255.255.255.0
+      ip default-gateway 192.168.30.1
+
+interface Ethernet1/1
+  description to core1
+  ip address 10.8.1.2/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip authentication mode eigrp 8 md5
+  ip authentication key-chain eigrp 8 eigrp
+  no shutdown
+
+interface Ethernet1/2
+  description to core2
+  ip address 10.8.3.2/24
+  ip pim sparse-mode
+  ip igmp version 3
+  ip router eigrp 8
+  ip authentication mode eigrp 8 md5
+  ip authentication key-chain eigrp 8 eigrp
+  no shutdown
+
+interface Ethernet1/3
+
+interface Ethernet1/4
+
+interface Ethernet1/5
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 161,164-165
+  description  to asa1 te5/0 
+  logging event port link-status
+  logging event port trunk-status
+  no shutdown
+
+interface Ethernet1/6
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 163,166-167
+  description  to asa1 te 5/1 
+  logging event port link-status
+  logging event port trunk-status
+  no shutdown
+
+interface Ethernet1/7
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 161,164-165
+  description  to asa2 te5/0 
+  logging event port link-status
+  logging event port trunk-status
+
+interface Ethernet1/8
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 163,166-167
+  description  to asa2 te 5/1 
+  logging event port link-status
+  logging event port trunk-status
+
+interface Ethernet1/9
+
+interface Ethernet1/10
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 128-133,151-153,161-167,180-183
+  switchport trunk allowed vlan add 300-399,770-771
+  description agg isl
+  channel-group 99
+  no shutdown
+
+interface Ethernet1/11
+
+interface Ethernet1/12
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 128-133,151-153,161-167,180-183
+  switchport trunk allowed vlan add 300-399,770-771
+  description agg isl
+  channel-group 99
+  no shutdown
+
+interface Ethernet1/13
+
+interface Ethernet1/14
+
+interface Ethernet1/15
+
+interface Ethernet1/16
+
+interface Ethernet1/17
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  description  to ss2 
+  channel-group 211 mode active
+  no shutdown
+
+interface Ethernet1/18
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  description  to ss2 
+  channel-group 211 mode active
+  no shutdown
+
+interface Ethernet1/19
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  description  to ss1 
+  channel-group 111 mode active
+  no shutdown
+
+interface Ethernet1/20
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 162-163,180-183
+  description  to ss1 
+  channel-group 111 mode active
+  no shutdown
+
+interface Ethernet1/21
+
+interface Ethernet1/22
+
+interface Ethernet1/23
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 128-133,166-167,180-183
+  description  to Access-1 6k 
+  no shutdown
+
+interface Ethernet1/24
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 128-133,166-167,180-183
+  description  to Access-2 4948 
+  no shutdown
+
+interface Ethernet10/25
+  switchport
+  switchport access vlan 770
+  description  ASA failover vlan 
+  no shutdown
+
+interface Ethernet10/26
+  switchport
+  switchport access vlan 771
+  description  ASA state vlan 
+  no shutdown
+
+interface mgmt0
+  ip address 192.168.30.54/24
+clock timezone PST -8 0
+clock summer-time PST 1 Sun April 02:00 5 Sun Oct 02:00 60
+boot kickstart bootflash:/n7000-s1-kickstart.4.0.2.bin sup-1
+boot system bootflash:/n7000-s1-dk9.4.0.2.bin sup-1
+line console
+  speed 38400
+router eigrp 8
+ip pim rp-address 10.8.20.1 group-list 224.0.0.0/4
